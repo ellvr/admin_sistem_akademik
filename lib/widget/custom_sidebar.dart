@@ -91,16 +91,12 @@ class _MainNavigationState extends State<MainNavigation> {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
-                  'Nama User',
+                  'Elvira Rosa',
                   style: TextStyle(
                     color: AppColors.textPrimary,
                     fontWeight: FontWeight.bold,
                     fontSize: 14,
                   ),
-                ),
-                Text(
-                  'Administrator',
-                  style: TextStyle(color: AppColors.textDisabled, fontSize: 12),
                 ),
               ],
             ),
