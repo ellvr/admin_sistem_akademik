@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:admin_sistem_akademik/theme/design_system.dart';
 
+// Import halaman-halaman Anda di sini
+import 'package:admin_sistem_akademik/screen/dashboard_page.dart';
+import 'package:admin_sistem_akademik/screen/kelas_page.dart';
+import 'package:admin_sistem_akademik/screen/profil_page.dart';
+
 class MainNavigation extends StatefulWidget {
   const MainNavigation({super.key});
 
@@ -12,10 +17,11 @@ class _MainNavigationState extends State<MainNavigation> {
   int _selectedIndex = 0;
   bool _isSidebarVisible = true;
 
+  // Daftar halaman yang diarahkan ke file masing-masing
   final List<Widget> _pages = [
-    Center(child: Text('Dashboard Content', style: AppTextStyles.sectionTitle)),
-    Center(child: Text('Kelas Content', style: AppTextStyles.sectionTitle)),
-    Center(child: Text('Profil Content', style: AppTextStyles.sectionTitle)),
+    const DashboardPage(),
+    const KelasPage(),
+    const ProfilPage(),
   ];
 
   @override
@@ -37,7 +43,6 @@ class _MainNavigationState extends State<MainNavigation> {
             }
           },
         ),
-
         actions: [
           _buildAppBarProfile(),
           const SizedBox(width: AppSpacing.lg),
@@ -71,7 +76,7 @@ class _MainNavigationState extends State<MainNavigation> {
   Widget _buildAppBarProfile() {
     return InkWell(
       onTap: () {
-        setState(() => _selectedIndex = 2);
+        setState(() => _selectedIndex = 2); // Langsung ke Profil
       },
       borderRadius: BorderRadius.circular(AppRadius.button),
       child: Padding(
@@ -142,7 +147,7 @@ class _MainNavigationState extends State<MainNavigation> {
               ),
               const SizedBox(width: AppSpacing.md),
               const Text(
-                'VokaPedia',
+                'SIADO',
                 style: TextStyle(
                   color: AppColors.primary,
                   fontWeight: FontWeight.bold,
@@ -162,18 +167,10 @@ class _MainNavigationState extends State<MainNavigation> {
     );
   }
 
-  Widget _buildSidebarItem(
-    int index,
-    IconData icon,
-    String label,
-    bool isMobile,
-  ) {
+  Widget _buildSidebarItem(int index, IconData icon, String label, bool isMobile) {
     bool isSelected = _selectedIndex == index;
     return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppSpacing.md,
-        vertical: 4,
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: 4),
       child: InkWell(
         onTap: () {
           setState(() => _selectedIndex = index);
@@ -186,9 +183,7 @@ class _MainNavigationState extends State<MainNavigation> {
             vertical: AppSpacing.md,
           ),
           decoration: BoxDecoration(
-            color: isSelected
-                ? AppColors.primary.withOpacity(0.1)
-                : Colors.transparent,
+            color: isSelected ? AppColors.primary.withOpacity(0.1) : Colors.transparent,
             borderRadius: BorderRadius.circular(AppRadius.card),
           ),
           child: Row(
@@ -204,9 +199,7 @@ class _MainNavigationState extends State<MainNavigation> {
                 style: TextStyle(
                   fontSize: 15,
                   fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
-                  color: isSelected
-                      ? AppColors.primary
-                      : AppColors.textSecondary,
+                  color: isSelected ? AppColors.primary : AppColors.textSecondary,
                 ),
               ),
             ],
@@ -221,21 +214,14 @@ class _MainNavigationState extends State<MainNavigation> {
       padding: const EdgeInsets.all(AppSpacing.xl),
       child: InkWell(
         onTap: () {
-          // Logika Logout
+          // Logika Sign Out Firebase Anda di sini
         },
         borderRadius: BorderRadius.circular(AppRadius.card),
         child: Padding(
-          padding: const EdgeInsets.symmetric(
-            vertical: AppSpacing.md,
-            horizontal: AppSpacing.lg,
-          ),
+          padding: const EdgeInsets.symmetric(vertical: AppSpacing.md, horizontal: AppSpacing.lg),
           child: Row(
             children: [
-              const Icon(
-                Icons.logout_rounded,
-                color: AppColors.error,
-                size: 22,
-              ),
+              const Icon(Icons.logout_rounded, color: AppColors.error, size: 22),
               const SizedBox(width: AppSpacing.lg),
               const Text(
                 "Logout",
