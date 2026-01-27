@@ -1,8 +1,6 @@
 import 'package:admin_sistem_akademik/widget/custom_sidebar.dart';
 import 'package:flutter/material.dart';
 
-import 'screen/dashboard_page.dart';
-
 void main() {
   runApp(const MyApp());
 }
@@ -15,11 +13,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Admin Sistem Akademik',
-      home: const MainNavigation()
+      home: const MainNavigation(),
+
       // home: const DashboardPage(),
-      
     );
   }
 }
-
-

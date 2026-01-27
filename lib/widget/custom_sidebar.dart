@@ -183,7 +183,7 @@ class _MainNavigationState extends State<MainNavigation> {
             vertical: AppSpacing.md,
           ),
           decoration: BoxDecoration(
-            color: isSelected ? AppColors.primary.withOpacity(0.1) : Colors.transparent,
+            color: isSelected ? AppColors.primary.withValues(alpha:0.1) : Colors.transparent,
             borderRadius: BorderRadius.circular(AppRadius.card),
           ),
           child: Row(
