@@ -1,7 +1,7 @@
+import 'package:admin_sistem_akademik/screen/auth/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:admin_sistem_akademik/theme/design_system.dart';
 
-// Import halaman-halaman Anda di sini
 import 'package:admin_sistem_akademik/screen/dashboard_page.dart';
 import 'package:admin_sistem_akademik/screen/kelas_page.dart';
 import 'package:admin_sistem_akademik/screen/profil_page.dart';
@@ -17,7 +17,6 @@ class _MainNavigationState extends State<MainNavigation> {
   int _selectedIndex = 0;
   bool _isSidebarVisible = true;
 
-  // Daftar halaman yang diarahkan ke file masing-masing
   final List<Widget> _pages = [
     const DashboardPage(),
     const KelasPage(),
@@ -33,6 +32,8 @@ class _MainNavigationState extends State<MainNavigation> {
       appBar: AppBar(
         backgroundColor: AppColors.surface,
         elevation: 0,
+        surfaceTintColor: Colors.transparent,
+        scrolledUnderElevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.menu, color: AppColors.textPrimary),
           onPressed: () {
@@ -76,7 +77,7 @@ class _MainNavigationState extends State<MainNavigation> {
   Widget _buildAppBarProfile() {
     return InkWell(
       onTap: () {
-        setState(() => _selectedIndex = 2); // Langsung ke Profil
+        setState(() => _selectedIndex = 2);
       },
       borderRadius: BorderRadius.circular(AppRadius.button),
       child: Padding(
@@ -105,7 +106,7 @@ class _MainNavigationState extends State<MainNavigation> {
               width: 38,
               height: 38,
               decoration: BoxDecoration(
-                color: AppColors.lightActive,
+                color: Color(0xFFB2E2F1),
                 shape: BoxShape.circle,
                 border: Border.all(color: AppColors.primary, width: 1.5),
               ),
@@ -143,7 +144,7 @@ class _MainNavigationState extends State<MainNavigation> {
               ),
               const SizedBox(width: AppSpacing.md),
               const Text(
-                'SIADO',
+                'ADMIN SIAM',
                 style: TextStyle(
                   color: AppColors.primary,
                   fontWeight: FontWeight.bold,
@@ -163,10 +164,18 @@ class _MainNavigationState extends State<MainNavigation> {
     );
   }
 
-  Widget _buildSidebarItem(int index, IconData icon, String label, bool isMobile) {
+  Widget _buildSidebarItem(
+    int index,
+    IconData icon,
+    String label,
+    bool isMobile,
+  ) {
     bool isSelected = _selectedIndex == index;
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: 4),
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.md,
+        vertical: 4,
+      ),
       child: InkWell(
         onTap: () {
           setState(() => _selectedIndex = index);
@@ -179,7 +188,9 @@ class _MainNavigationState extends State<MainNavigation> {
             vertical: AppSpacing.md,
           ),
           decoration: BoxDecoration(
-            color: isSelected ? AppColors.primary.withValues(alpha:0.1) : Colors.transparent,
+            color: isSelected
+                ? AppColors.primary.withValues(alpha: 0.1)
+                : Colors.transparent,
             borderRadius: BorderRadius.circular(AppRadius.card),
           ),
           child: Row(
@@ -195,7 +206,9 @@ class _MainNavigationState extends State<MainNavigation> {
                 style: TextStyle(
                   fontSize: 15,
                   fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
-                  color: isSelected ? AppColors.primary : AppColors.textSecondary,
+                  color: isSelected
+                      ? AppColors.primary
+                      : AppColors.textSecondary,
                 ),
               ),
             ],
@@ -209,15 +222,20 @@ class _MainNavigationState extends State<MainNavigation> {
     return Padding(
       padding: const EdgeInsets.all(AppSpacing.xl),
       child: InkWell(
-        onTap: () {
-          // Logika Sign Out Firebase Anda di sini
-        },
+        onTap: _handleLogout,
         borderRadius: BorderRadius.circular(AppRadius.card),
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: AppSpacing.md, horizontal: AppSpacing.lg),
+          padding: const EdgeInsets.symmetric(
+            vertical: AppSpacing.md,
+            horizontal: AppSpacing.lg,
+          ),
           child: Row(
             children: [
-              const Icon(Icons.logout_rounded, color: AppColors.error, size: 22),
+              const Icon(
+                Icons.logout_rounded,
+                color: AppColors.error,
+                size: 22,
+              ),
               const SizedBox(width: AppSpacing.lg),
               const Text(
                 "Logout",
@@ -231,6 +249,51 @@ class _MainNavigationState extends State<MainNavigation> {
           ),
         ),
       ),
+    );
+  }
+
+  void _handleLogout() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: AppColors.surface,
+          surfaceTintColor: AppColors.surface,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          title: const Text(
+            "Logout",
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          content: const Text("Apakah Anda yakin ingin keluar dari sistem?"),
+          actions: [
+            OutlinedButton(
+              onPressed: () => Navigator.pop(context),
+              style: OutlinedButton.styleFrom(
+                foregroundColor: AppColors.primary,
+                side: const BorderSide(color: AppColors.primary),
+              ),
+              child: const Text("Batal"),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context);
+
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (_) => const LoginPage()),
+                  (route) => false,
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primary,
+                foregroundColor: Colors.white,
+                elevation: 0,
+              ),
+              child: const Text("Logout"),
+            ),
+          ],
+        );
+      },
     );
   }
 }

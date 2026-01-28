@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:admin_sistem_akademik/theme/design_system.dart';
 
@@ -9,10 +11,76 @@ class ProfilPage extends StatefulWidget {
 }
 
 class _ProfilPageState extends State<ProfilPage> {
-  final TextEditingController _namaLengkapController = TextEditingController(text: "Elvira Rosa");
-  final TextEditingController _tempatLahirController = TextEditingController(text: "Malang");
-  final TextEditingController _alamatController = TextEditingController(text: "Jl. Ijen No.46 Kota Malang");
-  
+  final TextEditingController _namaLengkapController = TextEditingController(
+    text: "Elvira Rosa",
+  );
+  final TextEditingController _tempatLahirController = TextEditingController(
+    text: "Malang",
+  );
+  final TextEditingController _tanggalLahirController = TextEditingController(
+    text: "05/05/1945",
+  );
+  final TextEditingController _jenisKelaminController = TextEditingController(
+    text: "Perempuan",
+  );
+  final TextEditingController _agamaController = TextEditingController(
+    text: "Islam",
+  );
+  final TextEditingController _golonganDarahController = TextEditingController(
+    text: "A",
+  );
+  final TextEditingController _wargaNegaraController = TextEditingController(
+    text: "Indonesia",
+  );
+  final TextEditingController _alamatController = TextEditingController(
+    text: "Jl. Ijen No.46 Kota Malang",
+  );
+  final TextEditingController _negaraController = TextEditingController(
+    text: "Indonesia",
+  );
+  final TextEditingController _propinsiController = TextEditingController(
+    text: "Jawa Timur",
+  );
+  final TextEditingController _kotaController = TextEditingController(
+    text: "Malang",
+  );
+  final TextEditingController _kodePosController = TextEditingController(
+    text: "65432",
+  );
+  final TextEditingController _noHpController = TextEditingController(
+    text: "0987654321",
+  );
+  final TextEditingController _emailController = TextEditingController(
+    text: "elvirarosa@gmail.com",
+  );
+  final TextEditingController _nikController = TextEditingController(
+    text: "354567899762452",
+  );
+  final TextEditingController _npwpController = TextEditingController(
+    text: "53527738",
+  );
+  final TextEditingController _nipController = TextEditingController(
+    text: "235150600111006",
+  );
+  final TextEditingController _emailInstansiController = TextEditingController(
+    text: "elvira@admin.ub.ac.id",
+  );
+  final TextEditingController _fakultasController = TextEditingController(
+    text: "Ilmu Komputer",
+  );
+  final TextEditingController _departemenController = TextEditingController(
+    text: "Sistem Informasi",
+  );
+  final TextEditingController _programStudiController = TextEditingController(
+    text: "Sistem Informasi",
+  );
+  final TextEditingController _jabatanController = TextEditingController(
+    text: "Dosen",
+  );
+  final TextEditingController _statusController = TextEditingController(
+    text: "Aktif",
+  );
+
   bool _isSaving = false;
 
   Future<void> _handleSave() async {
@@ -24,7 +92,7 @@ class _ProfilPageState extends State<ProfilPage> {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text("Biodata berhasil diperbarui!"),
-        backgroundColor: Colors.green,
+        backgroundColor: AppColors.primary,
         behavior: SnackBarBehavior.floating,
       ),
     );
@@ -43,15 +111,11 @@ class _ProfilPageState extends State<ProfilPage> {
               children: [
                 const Text('Profil', style: AppTextStyles.sectionTitle),
                 const SizedBox(height: AppSpacing.xl),
-                
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // BAGIAN KIRI: RINGKASAN PROFIL
                     Expanded(flex: 1, child: _buildProfileCard()),
                     const SizedBox(width: AppSpacing.xl),
-                    
-                    // BAGIAN KANAN: FORMULIR BIODATA
                     Expanded(flex: 2, child: _buildBiodataForm()),
                   ],
                 ),
@@ -60,8 +124,10 @@ class _ProfilPageState extends State<ProfilPage> {
           ),
           if (_isSaving)
             Container(
-              color: Colors.black.withValues(alpha:0.1),
-              child: const Center(child: CircularProgressIndicator(color: AppColors.primary)),
+              color: Colors.black.withOpacity(0.1),
+              child: const Center(
+                child: CircularProgressIndicator(color: AppColors.primary),
+              ),
             ),
         ],
       ),
@@ -74,42 +140,40 @@ class _ProfilPageState extends State<ProfilPage> {
       decoration: BoxDecoration(
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.grey.withValues(alpha:0.2)),
+        border: Border.all(color: Colors.grey.withOpacity(0.2)),
       ),
       child: Column(
         children: [
-          // FOTO PROFIL VERSI KOTAK (Sesuai Wireframe)
           Container(
             width: 180,
             height: 180,
             decoration: BoxDecoration(
-              color: AppColors.primary.withValues(alpha:0.05),
-              borderRadius: BorderRadius.circular(4), // Kotak dengan sedikit curve
-              border: Border.all(color: Colors.grey.withValues(alpha:0.3), width: 1),
+              color: AppColors.primary.withOpacity(0.05),
+              borderRadius: BorderRadius.circular(4),
+              border: Border.all(color: Colors.grey.withOpacity(0.3), width: 1),
             ),
             child: Stack(
               children: [
                 const Center(
-                  child: Icon(Icons.person, size: 100, color: AppColors.primary),
+                  child: Icon(
+                    Icons.person,
+                    size: 100,
+                    color: AppColors.primary,
+                  ),
                 ),
-                // Garis silang tipis ala placeholder wireframe (Opsional)
-                CustomPaint(
-                  size: const Size(180, 180),
-                  
-                ),
+                CustomPaint(size: const Size(180, 180)),
               ],
             ),
           ),
           const SizedBox(height: 24),
-          
-          _infoProfilRow("Nama", "Elvira Rosa"),
-          _infoProfilRow("NIP", "235150600111006"),
-          _infoProfilRow("Email", "elvira@admin.ub.ac.id"),
-          _infoProfilRow("Fakultas", "Ilmu Komputer"),
-          _infoProfilRow("Department", "Sistem Informasi"),
-          _infoProfilRow("Program Studi", "Sistem Informasi"),
-          _infoProfilRow("Jabatan", "Dosen"),
-          _infoProfilRow("Status", "Aktif", isStatus: true),
+          _infoProfilRow("Nama", _namaLengkapController.text),
+          _infoProfilRow("NIP", _nipController.text),
+          _infoProfilRow("Email", _emailInstansiController.text),
+          _infoProfilRow("Fakultas", _fakultasController.text),
+          _infoProfilRow("Department", _departemenController.text),
+          _infoProfilRow("Program Studi", _programStudiController.text),
+          _infoProfilRow("Jabatan", _jabatanController.text),
+          _infoProfilRow("Status", _statusController.text, isStatus: true),
         ],
       ),
     );
@@ -121,79 +185,185 @@ class _ProfilPageState extends State<ProfilPage> {
       decoration: BoxDecoration(
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.grey.withValues(alpha:0.2)),
+        border: Border.all(color: Colors.grey.withOpacity(0.2)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text("Formulir Biodata", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          const Text(
+            "Formulir Biodata",
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
           const SizedBox(height: 20),
-          
           _formLabel("Nama Lengkap"),
           _buildTextField(_namaLengkapController),
-          
           const SizedBox(height: 16),
           Row(
             children: [
-              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [_formLabel("Tempat Lahir"), _buildTextField(_tempatLahirController)])),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _formLabel("Tempat Lahir"),
+                    _buildTextField(_tempatLahirController),
+                  ],
+                ),
+              ),
               const SizedBox(width: 12),
-              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [_formLabel("Tanggal Lahir"), _buildTextField(TextEditingController(text: "05/05/1945"))])),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _formLabel("Tanggal Lahir"),
+                    _buildTextField(_tanggalLahirController),
+                  ],
+                ),
+              ),
               const SizedBox(width: 12),
-              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [_formLabel("Jenis Kelamin"), _buildTextField(TextEditingController(text: "Perempuan"))])),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _formLabel("Jenis Kelamin"),
+                    _buildTextField(_jenisKelaminController),
+                  ],
+                ),
+              ),
             ],
           ),
-          
           const SizedBox(height: 16),
           Row(
             children: [
-              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [_formLabel("Agama"), _buildTextField(TextEditingController(text: "Islam"))])),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _formLabel("Agama"),
+                    _buildTextField(_agamaController),
+                  ],
+                ),
+              ),
               const SizedBox(width: 12),
-              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [_formLabel("Golongan Darah"), _buildTextField(TextEditingController(text: "A"))])),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _formLabel("Golongan Darah"),
+                    _buildTextField(_golonganDarahController),
+                  ],
+                ),
+              ),
               const SizedBox(width: 12),
-              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [_formLabel("Warga Negara"), _buildTextField(TextEditingController(text: "Indonesia"))])),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _formLabel("Warga Negara"),
+                    _buildTextField(_wargaNegaraController),
+                  ],
+                ),
+              ),
             ],
           ),
-          
           const SizedBox(height: 16),
           _formLabel("Alamat"),
           _buildTextField(_alamatController),
-          
           const SizedBox(height: 16),
           Row(
             children: [
-              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [_formLabel("Negara"), _buildTextField(TextEditingController(text: "Indonesia"))])),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _formLabel("Negara"),
+                    _buildTextField(_negaraController),
+                  ],
+                ),
+              ),
               const SizedBox(width: 12),
-              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [_formLabel("Propinsi"), _buildTextField(TextEditingController(text: "Jawa Timur"))])),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _formLabel("Propinsi"),
+                    _buildTextField(_propinsiController),
+                  ],
+                ),
+              ),
             ],
           ),
-          
           const SizedBox(height: 16),
           Row(
             children: [
-              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [_formLabel("Kota"), _buildTextField(TextEditingController(text: "Malang"))])),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _formLabel("Kota"),
+                    _buildTextField(_kotaController),
+                  ],
+                ),
+              ),
               const SizedBox(width: 12),
-              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [_formLabel("Kode Pos"), _buildTextField(TextEditingController(text: "65432"))])),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _formLabel("Kode Pos"),
+                    _buildTextField(_kodePosController),
+                  ],
+                ),
+              ),
             ],
           ),
-          
           const SizedBox(height: 16),
           Row(
             children: [
-              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [_formLabel("No.Hp"), _buildTextField(TextEditingController(text: "0987654321"))])),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _formLabel("No.Hp"),
+                    _buildTextField(_noHpController),
+                  ],
+                ),
+              ),
               const SizedBox(width: 12),
-              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [_formLabel("Email"), _buildTextField(TextEditingController(text: "elvirarosa@gmail.com"))])),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _formLabel("Email"),
+                    _buildTextField(_emailController),
+                  ],
+                ),
+              ),
             ],
           ),
-          
           const SizedBox(height: 16),
           Row(
             children: [
-              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [_formLabel("NIK"), _buildTextField(TextEditingController(text: "354567899762452"))])),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _formLabel("NIK"),
+                    _buildTextField(_nikController),
+                  ],
+                ),
+              ),
               const SizedBox(width: 12),
-              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [_formLabel("NPWP"), _buildTextField(TextEditingController(text: "53527738"))])),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _formLabel("NPWP"),
+                    _buildTextField(_npwpController),
+                  ],
+                ),
+              ),
             ],
           ),
-          
           const SizedBox(height: 24),
           Align(
             alignment: Alignment.centerRight,
@@ -201,10 +371,21 @@ class _ProfilPageState extends State<ProfilPage> {
               onPressed: _handleSave,
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primary,
-                padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 32,
+                  vertical: 16,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(4),
+                ),
               ),
-              child: const Text("Simpan", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+              child: const Text(
+                "Simpan",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
           ),
         ],
@@ -215,7 +396,10 @@ class _ProfilPageState extends State<ProfilPage> {
   Widget _formLabel(String label) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 4),
-      child: Text(label, style: const TextStyle(fontSize: 12, color: Colors.grey)),
+      child: Text(
+        label,
+        style: const TextStyle(fontSize: 12, color: Colors.grey),
+      ),
     );
   }
 
@@ -247,7 +431,13 @@ class _ProfilPageState extends State<ProfilPage> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(width: 100, child: Text(label, style: const TextStyle(fontSize: 13, color: Colors.grey))),
+          SizedBox(
+            width: 100,
+            child: Text(
+              label,
+              style: const TextStyle(fontSize: 13, color: Colors.grey),
+            ),
+          ),
           const Text(" : ", style: TextStyle(fontSize: 13)),
           Expanded(
             child: Text(

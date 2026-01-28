@@ -24,7 +24,6 @@ class _DetailKelasPageState extends State<DetailKelasPage> {
     "07 Jan 2026",
   ];
 
-  // Data Mahasiswa yang sekarang bersifat dinamis agar bisa berubah saat ganti tanggal
   late List<Map<String, dynamic>> _currentMahasiswa;
 
   @override
@@ -102,18 +101,15 @@ class _DetailKelasPageState extends State<DetailKelasPage> {
     ];
   }
 
-  // Fungsi untuk simulasi loading dan perubahan data
   Future<void> _switchTanggal(String newTanggal) async {
     setState(() {
       _isLoading = true;
       _selectedTanggalPresensi = newTanggal;
     });
 
-    // Simulasi loading 1 detik
     await Future.delayed(const Duration(milliseconds: 800));
 
     setState(() {
-      // Mengacak status data dummy agar terlihat ada perubahan data per tanggal
       for (var m in _currentMahasiswa) {
         final statuses = ["Hadir", "Alfa", "Izin", "Sakit"];
         m['status'] = (statuses..shuffle()).first;
@@ -161,7 +157,7 @@ class _DetailKelasPageState extends State<DetailKelasPage> {
                     borderRadius: BorderRadius.circular(8),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withValues(alpha:0.04),
+                        color: Colors.black.withValues(alpha: 0.04),
                         blurRadius: 20,
                         offset: const Offset(0, 4),
                       ),
@@ -197,7 +193,7 @@ class _DetailKelasPageState extends State<DetailKelasPage> {
           // Overlay Loading
           if (_isLoading)
             Container(
-              color: Colors.white.withValues(alpha:0.5),
+              color: Colors.white.withValues(alpha: 0.5),
               child: const Center(
                 child: CircularProgressIndicator(color: AppColors.primary),
               ),
@@ -252,17 +248,13 @@ class _DetailKelasPageState extends State<DetailKelasPage> {
     );
   }
 
-  // --- Sisa widget (_infoRow, _buildHeaderInfo, _buildSearchSection, _buildPresensiTable, _statusDropdownMinimalist, _buildModernRekap, _rekapBadge, _cell) tetap sama ---
-  // (Pastikan menyalin fungsi-fungsi pendukung tersebut dari kode sebelumnya)
-
   Widget _buildHeaderInfo() {
     return SizedBox(
       width: MediaQuery.of(context).size.width * 0.4,
       child: Column(
         children: [
           _infoRow("Mata Kuliah", widget.data['nama'] ?? "-"),
-          _infoRow("Departemen", "Sistem Informasi"),
-          _infoRow("Program Studi", widget.data['prodi'] ?? "-"),
+          _infoRow("Program Studi", "Magister Sistem Informasi"),
         ],
       ),
     );
@@ -338,7 +330,7 @@ class _DetailKelasPageState extends State<DetailKelasPage> {
   Widget _buildPresensiTable(List<Map<String, dynamic>> data) {
     return Container(
       decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey.withValues(alpha:0.1)),
+        border: Border.all(color: Colors.grey.withValues(alpha: 0.1)),
         borderRadius: BorderRadius.circular(4),
       ),
       child: ClipRRect(
@@ -375,7 +367,7 @@ class _DetailKelasPageState extends State<DetailKelasPage> {
                     decoration: BoxDecoration(
                       border: Border(
                         bottom: BorderSide(
-                          color: Colors.grey.withValues(alpha:0.05),
+                          color: Colors.grey.withValues(alpha: 0.05),
                         ),
                       ),
                     ),
@@ -393,7 +385,7 @@ class _DetailKelasPageState extends State<DetailKelasPage> {
                     ],
                   ),
                 )
-                .toList(),
+                ,
           ],
         ),
       ),
@@ -470,9 +462,9 @@ class _DetailKelasPageState extends State<DetailKelasPage> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
       decoration: BoxDecoration(
-        color: c.withValues(alpha:0.08),
+        color: c.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: c.withValues(alpha:0.2)),
+        border: Border.all(color: c.withValues(alpha: 0.2)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
