@@ -61,19 +61,36 @@ class DashboardPage extends StatelessWidget {
       (sum, c) => sum + (c["jam"] as double),
     );
 
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(AppSpacing.xxl),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            flex: 1,
-            child: _profileCard(totalKelas, totalJam, totalSKS),
-          ),
-          const SizedBox(width: AppSpacing.xl),
-          Expanded(flex: 2, child: _upcomingClass()),
-        ],
-      ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        bool isWide = constraints.maxWidth > 900;
+
+        return SingleChildScrollView(
+          padding: const EdgeInsets.all(AppSpacing.xxl),
+          child: isWide
+              ? Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: _profileCard(totalKelas, totalJam, totalSKS),
+                    ),
+                    const SizedBox(width: AppSpacing.xl),
+                    Expanded(
+                      flex: 2,
+                      child: _upcomingClass(),
+                    ),
+                  ],
+                )
+              : Column(
+                  children: [
+                    _profileCard(totalKelas, totalJam, totalSKS),
+                    const SizedBox(height: AppSpacing.xl),
+                    _upcomingClass(),
+                  ],
+                ),
+        );
+      },
     );
   }
 
@@ -87,8 +104,8 @@ class DashboardPage extends StatelessWidget {
             width: 160,
             height: 160,
             decoration: BoxDecoration(
-              border: Border.all(color: Color(0xFFB2E2F1)),
-              color: Color(0xFFE6F6FB),
+              border: Border.all(color: const Color(0xFFB2E2F1)),
+              color: const Color(0xFFE6F6FB),
             ),
             child: const Icon(Icons.person, size: 80, color: AppColors.primary),
           ),
@@ -146,15 +163,25 @@ class DashboardPage extends StatelessWidget {
         children: [
           const Text("Upcoming Class", style: AppTextStyles.sectionTitle),
           const SizedBox(height: 16),
-          _tableHeader(),
-          ...classes.map(
-            (c) => _row(
-              c["jadwal"],
-              c["mk"],
-              c["kode"],
-              c["kelas"],
-              c["ruang"],
-              c["sks"].toString(),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: SizedBox(
+              width: 600, 
+              child: Column(
+                children: [
+                  _tableHeader(),
+                  ...classes.map(
+                    (c) => _row(
+                      c["jadwal"],
+                      c["mk"],
+                      c["kode"],
+                      c["kelas"],
+                      c["ruang"],
+                      c["sks"].toString(),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ],

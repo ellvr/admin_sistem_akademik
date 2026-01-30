@@ -1,6 +1,6 @@
-import 'package:admin_sistem_akademik/widget/custom_sidebar.dart';
 import 'package:flutter/material.dart';
 import 'package:admin_sistem_akademik/theme/design_system.dart';
+import 'package:admin_sistem_akademik/widget/custom_sidebar.dart'; 
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
@@ -9,64 +9,80 @@ class LoginPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-      body: Column(
-        children: [
-          _buildTopBar(),
-          Expanded(
-            child: Row(
-              children: [
-                Expanded(
-                  flex: 6,
-                  child: Container(
-                    margin: EdgeInsets.all(40),
-                    child: ConstrainedBox(
-                      constraints: const BoxConstraints(
-                        maxWidth: 600,
-                        maxHeight: 600,
-                      ),
-                      child: AspectRatio(
-                        aspectRatio: 4 / 3,
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          double screenWidth = constraints.maxWidth;
+          bool isMobile = screenWidth < 600;
+          bool hideImage = screenWidth < 1024;
+
+          return Column(
+            children: [
+              _buildTopBar(),
+              Expanded(
+                child: Row(
+                  children: [
+                    if (!hideImage)
+                      Expanded(
+                        flex: 6,
                         child: Container(
-                          decoration: BoxDecoration(
-                            color: AppColors.surface,
-                            borderRadius: BorderRadius.circular(12),
+                          margin: const EdgeInsets.all(40),
+                          alignment: Alignment.center,
+                          child: ConstrainedBox(
+                            constraints: const BoxConstraints(
+                              maxWidth: 600,
+                              maxHeight: 600,
+                            ),
+                            child: AspectRatio(
+                              aspectRatio: 4 / 3,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: AppColors.surface,
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                clipBehavior: Clip.antiAlias,
+                                child: Image.asset(
+                                  'assets/sampul.png',
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
                           ),
-                          clipBehavior: Clip.antiAlias,
-                          child: Image.asset(
-                            'assets/sampul.png',
-                            fit: BoxFit.cover,
+                        ),
+                      ),
+
+                    Expanded(
+                      flex: hideImage ? 1 : 4,
+                      child: Center(
+                        child: SingleChildScrollView(
+                          padding: const EdgeInsets.symmetric(vertical: 20),
+                          child: Container(
+                            width: isMobile ? double.infinity : 420,
+                            margin: EdgeInsets.symmetric(
+                              horizontal: isMobile ? 24 : 0,
+                            ),
+                            padding: const EdgeInsets.all(AppSpacing.xxl),
+                            decoration: BoxDecoration(
+                              color: AppColors.surface,
+                              borderRadius: BorderRadius.circular(12),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withValues(alpha: .05),
+                                  blurRadius: 20,
+                                  offset: const Offset(0, 6),
+                                ),
+                              ],
+                            ),
+                            child: const _LoginForm(),
                           ),
                         ),
                       ),
                     ),
-                  ),
+                  ],
                 ),
-
-                Expanded(
-                  flex: 4,
-                  child: Center(
-                    child: Container(
-                      width: 420,
-                      padding: const EdgeInsets.all(AppSpacing.xxl),
-                      decoration: BoxDecoration(
-                        color: AppColors.surface,
-                        borderRadius: BorderRadius.circular(12),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withValues(alpha: .05),
-                            blurRadius: 20,
-                            offset: const Offset(0, 6),
-                          ),
-                        ],
-                      ),
-                      child: const _LoginForm(),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
+              ),
+            ],
+          );
+        },
       ),
     );
   }
@@ -123,6 +139,7 @@ class _LoginFormState extends State<_LoginForm> {
           width: double.infinity,
           height: 42,
           child: ElevatedButton(
+            key: const Key('login_button'),
             onPressed: _handleLogin,
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.primary,
@@ -143,6 +160,7 @@ class _LoginFormState extends State<_LoginForm> {
     required String hint,
   }) {
     return TextField(
+      key: const Key('email_field'),
       controller: controller,
       cursorColor: AppColors.primary,
       decoration: InputDecoration(
@@ -168,6 +186,7 @@ class _LoginFormState extends State<_LoginForm> {
 
   Widget _passwordField() {
     return TextField(
+      key: const Key('password_field'),
       controller: _passwordController,
       obscureText: _obscure,
       cursorColor: AppColors.primary,
@@ -241,7 +260,7 @@ class _LoginFormState extends State<_LoginForm> {
     if (email == "elvira@admin.ub.ac.id" && password == "12345678") {
       Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(builder: (_) => const MainNavigation()),
+        MaterialPageRoute(builder: (_) => const MainNavigation()), 
         (route) => false,
       );
     } else {

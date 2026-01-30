@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_interpolation_to_compose_strings
-
 import 'package:flutter/material.dart';
 import 'package:admin_sistem_akademik/theme/design_system.dart';
 import 'detail_kelas_page.dart';
@@ -18,6 +16,9 @@ class _KelasPageState extends State<KelasPage> {
   String searchQuery = "";
   final TextEditingController _searchController = TextEditingController();
   final TextEditingController _pengumumanController = TextEditingController();
+
+  final _formPresensiKey = GlobalKey<FormState>();
+  final _formPengumumanKey = GlobalKey<FormState>();
 
   final List<Map<String, String>> allData = [
     {
@@ -275,7 +276,7 @@ class _KelasPageState extends State<KelasPage> {
               () => _showPresensiModal(data),
             ),
             const SizedBox(width: 6),
-            _miniBtn("Pengumuman", Colors.orange, _showPengumumanModal),
+            _miniBtn("Pengumuman", Colors.orange, () => _showPengumumanModal(data)),
             const SizedBox(width: 6),
             _miniBtn("Lihat", AppColors.textDisabled, () => _openDetail(data)),
           ],
@@ -312,7 +313,8 @@ class _KelasPageState extends State<KelasPage> {
     });
   }
 
-  void _showPengumumanModal() {
+  void _showPengumumanModal(Map<String, String> data) {
+    _pengumumanController.clear();
     showDialog(
       context: context,
       builder: (context) {
@@ -324,27 +326,50 @@ class _KelasPageState extends State<KelasPage> {
             "Pengumuman Kelas",
             style: AppTextStyles.itemTitle.copyWith(color: AppColors.primary),
           ),
-          content: Container(
-            width: 420,
-            decoration: BoxDecoration(
-              color: AppColors.background,
-              borderRadius: BorderRadius.circular(6),
-              border: Border.all(color: AppColors.lightActive),
-            ),
-            child: TextField(
-              controller: _pengumumanController,
-              maxLines: 5,
-              decoration: const InputDecoration(
-                hintText: "Tuliskan pengumuman untuk mata kuliah ini...",
-                hintStyle: TextStyle(fontSize: 14, color: Colors.grey),
-                contentPadding: EdgeInsets.all(12),
-                border: InputBorder.none,
+          content: SizedBox(
+            width: 500, 
+            child: Form(
+              key: _formPengumumanKey,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  _infoRow("Mata Kuliah", data['nama']!),
+                  const SizedBox(height: 12),
+                  TextFormField(
+                    controller: _pengumumanController,
+                    maxLines: 5,
+                    validator: (value) {
+                      if (value == null || value.trim().isEmpty) {
+                        return 'Isi pengumuman terlebih dahulu';
+                      }
+                      return null;
+                    },
+                    decoration: InputDecoration(
+                      hintText: "Tuliskan pengumuman untuk mata kuliah ini...",
+                      hintStyle: const TextStyle(fontSize: 14, color: Colors.grey),
+                      fillColor: AppColors.background,
+                      filled: true,
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(color: AppColors.lightActive),
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(color: AppColors.primary),
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      errorBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(color: Colors.red),
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      focusedErrorBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(color: Colors.red),
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
-          ),
-          actionsPadding: const EdgeInsets.symmetric(
-            horizontal: 16,
-            vertical: 12,
           ),
           actions: [
             OutlinedButton(
@@ -353,30 +378,19 @@ class _KelasPageState extends State<KelasPage> {
                 foregroundColor: AppColors.primary,
                 side: const BorderSide(color: AppColors.primary),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(6),
+                  borderRadius: BorderRadius.circular(4), 
                 ),
               ),
               child: const Text("Batal"),
             ),
             ElevatedButton(
-              onPressed: () {
-                if (_pengumumanController.text.trim().isEmpty) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text("Pengumuman tidak boleh kosong"),
-                    ),
-                  );
-                  return;
-                }
-                Navigator.pop(context);
-                _pengumumanController.clear();
-              },
+              onPressed: () => _simpanData("Pengumuman", _formPengumumanKey, data),
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primary,
                 foregroundColor: Colors.white,
                 elevation: 0,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(6),
+                  borderRadius: BorderRadius.circular(4), 
                 ),
               ),
               child: const Text("Unggah"),
@@ -396,35 +410,24 @@ class _KelasPageState extends State<KelasPage> {
     showDialog(
       context: context,
       builder: (context) {
-        return Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: ColorScheme.light(
-              primary: AppColors.primary,
-              onPrimary: Colors.white,
-              onSurface: AppColors.textPrimary,
-            ),
+        return AlertDialog(
+          backgroundColor: AppColors.surface,
+          surfaceTintColor: AppColors.surface,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          title: Text(
+            "Presensi Kelas",
+            style: AppTextStyles.itemTitle.copyWith(color: AppColors.primary),
           ),
-          child: AlertDialog(
-            backgroundColor: AppColors.surface,
-            surfaceTintColor: AppColors.surface,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
-            title: Text(
-              "Presensi Kelas",
-              style: AppTextStyles.itemTitle.copyWith(color: AppColors.primary),
-            ),
-            content: SizedBox(
-              width: 420,
-              child: StatefulBuilder(
-                builder: (context, setModalState) {
-                  return Column(
+          content: SizedBox(
+            width: 450,
+            child: StatefulBuilder(
+              builder: (context, setModalState) {
+                return Form(
+                  key: _formPresensiKey,
+                  child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      _infoRow(
-                        "Mata Kuliah",
-                        "${data['nama']} (${data['kelas']})",
-                      ),
+                      _infoRow("Mata Kuliah", "${data['nama']} (${data['kelas']})"),
                       _infoRow("SKS", data['sks']!),
                       const SizedBox(height: 16),
                       Row(
@@ -439,28 +442,17 @@ class _KelasPageState extends State<KelasPage> {
                                 firstDate: DateTime(2020),
                                 lastDate: DateTime(2100),
                               );
-                              if (picked != null) {
-                                setModalState(() => selectedDate = picked);
-                              }
+                              if (picked != null) setModalState(() => selectedDate = picked);
                             },
                             child: Container(
                               width: 170,
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 12,
-                                vertical: 12,
-                              ),
+                              padding: const EdgeInsets.all(12),
                               decoration: BoxDecoration(
                                 color: AppColors.background,
-                                border: Border.all(
-                                  color: AppColors.lightActive,
-                                ),
+                                border: Border.all(color: AppColors.lightActive),
                                 borderRadius: BorderRadius.circular(6),
                               ),
-                              child: Text(
-                                "${selectedDate.day.toString().padLeft(2, '0')}/"
-                                "${selectedDate.month.toString().padLeft(2, '0')}/"
-                                "${selectedDate.year}",
-                              ),
+                              child: Text("${selectedDate.day}/${selectedDate.month}/${selectedDate.year}"),
                             ),
                           ),
                         ],
@@ -468,98 +460,176 @@ class _KelasPageState extends State<KelasPage> {
                       const SizedBox(height: 16),
                       Row(
                         children: [
-                          const SizedBox(
-                            width: 120,
-                            child: Text("Waktu Presensi"),
-                          ),
+                          const SizedBox(width: 120, child: Text("Waktu Presensi")),
                           const Text(": "),
-                          _timeBox(
-                            context,
-                            startTime,
-                            (t) => setModalState(() => startTime = t),
-                          ),
-                          const Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 8),
-                            child: Text("-"),
-                          ),
-                          _timeBox(
-                            context,
-                            endTime,
-                            (t) => setModalState(() => endTime = t),
-                          ),
+                          _timeBox(context, startTime, (t) => setModalState(() => startTime = t)),
+                          const Padding(padding: EdgeInsets.symmetric(horizontal: 8), child: Text("-")),
+                          _timeBox(context, endTime, (t) => setModalState(() => endTime = t)),
                         ],
                       ),
                       const SizedBox(height: 16),
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const SizedBox(width: 120, child: Text("Topik")),
+                          const SizedBox(width: 120, child: Padding(padding: EdgeInsets.only(top: 12), child: Text("Topik"))),
                           const Text(": "),
                           Expanded(
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: AppColors.background,
-                                borderRadius: BorderRadius.circular(6),
-                                border: Border.all(
-                                  color: AppColors.lightActive,
-                                ),
-                              ),
-                              child: TextField(
-                                controller: topikController,
-                                maxLines: 3,
-                                decoration: const InputDecoration(
-                                  hintText:
-                                      "Tuliskan topik perkuliahan di sini..",
-                                  hintStyle: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.grey,
-                                  ),
-                                  contentPadding: EdgeInsets.all(12),
-                                  border: InputBorder.none,
-                                ),
+                            child: TextFormField(
+                              controller: topikController,
+                              maxLines: 2,
+                              validator: (value) {
+                                if (value == null || value.trim().isEmpty) return 'Wajib diisi';
+                                if (startTime == null || endTime == null) return 'Pilih waktu';
+                                return null;
+                              },
+                              decoration: InputDecoration(
+                                hintText: "Topik perkuliahan..",
+                                hintStyle: const TextStyle(fontSize: 14, color: Colors.grey),
+                                fillColor: AppColors.background,
+                                filled: true,
+                                contentPadding: const EdgeInsets.all(12),
+                                enabledBorder: OutlineInputBorder(borderSide: const BorderSide(color: AppColors.lightActive), borderRadius: BorderRadius.circular(6)),
+                                focusedBorder: OutlineInputBorder(borderSide: const BorderSide(color: AppColors.primary), borderRadius: BorderRadius.circular(6)),
+                                errorBorder: OutlineInputBorder(borderSide: const BorderSide(color: Colors.red), borderRadius: BorderRadius.circular(6)),
+                                focusedErrorBorder: OutlineInputBorder(borderSide: const BorderSide(color: Colors.red), borderRadius: BorderRadius.circular(6)),
                               ),
                             ),
                           ),
                         ],
                       ),
                     ],
-                  );
-                },
-              ),
-            ),
-            actionsPadding: const EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: 20,
-            ),
-            actions: [
-              OutlinedButton(
-                onPressed: () => Navigator.pop(context),
-                style: OutlinedButton.styleFrom(
-                  foregroundColor: AppColors.primary,
-                  side: const BorderSide(color: AppColors.primary),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(6),
                   ),
-                ),
-                child: const Text("Batal"),
-              ),
-              ElevatedButton(
-                onPressed: () => Navigator.pop(context),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary,
-                  foregroundColor: Colors.white,
-                  elevation: 0,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(6),
-                  ),
-                ),
-                child: const Text("Unggah"),
-              ),
-            ],
+                );
+              },
+            ),
           ),
+          actions: [
+            OutlinedButton(
+              onPressed: () => Navigator.pop(context),
+              style: OutlinedButton.styleFrom(
+                foregroundColor: AppColors.primary,
+                side: const BorderSide(color: AppColors.primary), 
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(4), 
+                ),
+              ),
+              child: const Text("Batal"),
+            ),
+            ElevatedButton(
+              onPressed: () => _simpanData("Presensi", _formPresensiKey, data),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primary,
+                foregroundColor: Colors.white,
+                elevation: 0,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(4), 
+                ),
+              ),
+              child: const Text("Unggah"),
+            ),
+          ],
         );
       },
     );
+  }
+
+  Future<void> _simpanData(String type, GlobalKey<FormState> key, Map<String, String> data) async {
+    if (key.currentState!.validate()) {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const Center(child: CircularProgressIndicator()),
+      );
+
+      try {
+        await Future.delayed(const Duration(seconds: 1));
+        
+        if (!mounted) return;
+        Navigator.pop(context); 
+        Navigator.pop(context); 
+
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            backgroundColor: AppColors.surface,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const SizedBox(height: 16),
+                const Icon(Icons.check_circle, color: Colors.green, size: 64),
+                const SizedBox(height: 24),
+                Text(
+                  "Berhasil",
+                  style: AppTextStyles.itemTitle.copyWith(
+                    color: Colors.green,
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  "$type untuk mata kuliah ${data['nama']}\nberhasil dibuat.", 
+                  style: const TextStyle(fontSize: 14, height: 1.5),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 32),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      width: 120,
+                      child: OutlinedButton(
+                        onPressed: () => Navigator.pop(context),
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: AppColors.primary,
+                          side: const BorderSide(color: AppColors.primary),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                        ),
+                        child: const Text("Batal"),
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    SizedBox(
+                      width: 120,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                          _openDetail(data);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.primary,
+                          foregroundColor: Colors.white,
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                        ),
+                        child: const Text("Lihat"),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      } catch (e) {
+        if (!mounted) return;
+        Navigator.pop(context);
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text("Gagal"),
+            content: Text("Terjadi kesalahan: $e"),
+            actions: [TextButton(onPressed: () => Navigator.pop(context), child: const Text("OK"))],
+          ),
+        );
+      }
+    }
   }
 
   Widget _infoRow(String label, String value) {
@@ -568,51 +638,39 @@ class _KelasPageState extends State<KelasPage> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(width: 120, child: Text(label)),
+          SizedBox(width: 120, child: Text(label, style: const TextStyle(color: Colors.grey, fontSize: 13))),
           const Text(": "),
-          Expanded(child: Text(value)),
+          Expanded(child: Text(value, style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 13))),
         ],
       ),
     );
   }
 
-  Widget _timeBox(
-    BuildContext context,
-    TimeOfDay? time,
-    Function(TimeOfDay) onPick,
-  ) {
+  Widget _timeBox(BuildContext context, TimeOfDay? time, Function(TimeOfDay) onPick) {
     return InkWell(
       onTap: () async {
         final picked = await showTimePicker(
           context: context,
           initialTime: time ?? TimeOfDay.now(),
-          initialEntryMode: TimePickerEntryMode.inputOnly,
-          builder: (context, child) {
-            return MediaQuery(
-              data: MediaQuery.of(
-                context,
-              ).copyWith(alwaysUse24HourFormat: true),
-              child: child!,
-            );
-          },
+          builder: (context, child) => MediaQuery(
+            data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
+            child: child!,
+          ),
         );
-
         if (picked != null) onPick(picked);
       },
       child: Container(
-        width: 90,
-        padding: const EdgeInsets.symmetric(vertical: 12),
+        width: 80,
+        padding: const EdgeInsets.symmetric(vertical: 8),
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          border: Border.all(color: AppColors.primary),
+          color: AppColors.background,
+          border: Border.all(color: time == null ? Colors.red.withValues(alpha: 0.5) : AppColors.lightActive),
           borderRadius: BorderRadius.circular(6),
         ),
         child: Text(
-          time == null
-              ? "12:00"
-              : time.hour.toString().padLeft(2, '0') +
-                    ":" +
-                    time.minute.toString().padLeft(2, '0'),
+          time == null ? "-- : --" : "${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}",
+          style: TextStyle(color: time == null ? Colors.red : AppColors.textPrimary),
         ),
       ),
     );

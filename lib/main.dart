@@ -1,5 +1,5 @@
 import 'package:admin_sistem_akademik/screen/auth/login_page.dart';
-import 'package:admin_sistem_akademik/widget/custom_sidebar.dart';
+// import 'package:admin_sistem_akademik/widget/custom_sidebar.dart';
 import 'package:flutter/material.dart';
 
 void main() {
